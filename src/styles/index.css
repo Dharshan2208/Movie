@@ -1,0 +1,366 @@
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "DM Sans", serif;
+  background: #030014;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+main {
+  min-height: 100vh;
+  position: relative;
+  padding: 20px;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Header Styles */
+header {
+  margin-top: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+}
+
+h1 span {
+  background: linear-gradient(90deg, #D6C7FF, #AB8BFF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Search Styles */
+.search {
+  position: relative;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.search div {
+  position: relative;
+  background: rgba(206, 206, 251, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.search img {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+}
+
+.search input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: #a8b5db;
+}
+
+/* Input Selector Styles */
+.input-selector {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.option-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.option-button {
+  padding: 10px 20px;
+  background: #ffffff;
+  color: #0f0d23;
+  border: 2px solid #9ca4ab;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-button:hover {
+  background: #4ecdc4;
+  color: #ffffff;
+  border-color: #4ecdc4;
+}
+
+.option-button.selected {
+  background: #4ecdc4;
+  color: #ffffff;
+  border-color: #4ecdc4;
+}
+
+/* Movie Inputs Styles */
+.movie-inputs {
+  margin: 20px 0;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.input-group input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  background: rgba(15, 13, 35, 0.5);
+  border: 2px solid #9ca4ab;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+/* Submit Button Styles */
+.submit-button {
+  padding: 12px 25px;
+  background: #ff6b6b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #ff8787;
+}
+
+.submit-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+/* Spinner Styles */
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner svg {
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Recommendations Styles */
+.recommendations {
+  margin: 20px 0;
+}
+
+.recommendations-list {
+  list-style: none;
+  margin-top: 15px;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.recommendation-number {
+  width: 24px;
+  height: 24px;
+  background: #4ecdc4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Movie Card Styles */
+.movie-card {
+  background: #0f0d23;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: inset 0 0 10px rgba(206, 206, 251, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.movie-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #9ca4ab;
+  font-size: 14px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rating img {
+  width: 16px;
+  height: 16px;
+}
+
+.rating p {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Trending Movies Styles */
+.trending {
+  margin-top: 30px;
+  min-height: 100px;
+  /* Reduced margin */
+}
+
+.trending ul {
+  display: flex;
+  gap: 15px;
+  /* Reduced gap between cards */
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.trending li {
+  min-width: 180px;
+  /* Reduced card width from 230px to 180px */
+  flex-shrink: 0;
+}
+
+/* All Movies Styles */
+.all-movies {
+  margin-top: 40px;
+}
+
+.all-movies ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+/* Error Message */
+.error-message {
+  color: #ff6b6b;
+  margin-top: 10px;
+}
+
+/* Scrollbar Hiding */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-mixer {
+  margin: 20px auto;
+  /* Center the section horizontally */
+  max-width: 800px;
+  /* Limit width for better centering */
+  text-align: center;
+  /* Center text and elements */
+}
+
+.movie-inputs,
+.input-selector,
+.submit-button {
+  text-align: center;
+  /* Ensure all child elements are centered */
+}
+
+.option-buttons {
+  justify-content: center;
+  /* Center the option buttons */
+  gap: 15px;
+  /* Maintain spacing between buttons */
+}
+
+.input-group {
+  display: inline-block;
+  /* Allow inputs to be centered */
+  margin: 15px auto;
+  /* Center input groups */
+  text-align: left;
+  /* Left-align labels and inputs within the group */
+}
+
+.input-group input {
+  max-width: 300px;
+  /* Reduce input width for centering */
+}
+
+/* Ensure the submit button stays centered */
+.submit-button {
+  display: block;
+  /* Make it a block element for centering */
+  margin: 20px auto;
+  /* Center horizontally */
+}
