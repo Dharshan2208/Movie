@@ -1,0 +1,46 @@
+.movie-details {
+    background: #1a1a2e;
+    color: #ffffff;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+.movie-header {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.poster {
+    width: 300px;
+    border-radius: 10px;
+}
+
+.movie-info {
+    flex: 1;
+}
+
+.movie-info h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2rem;
+}
+
+.movie-story,
+.streaming-options {
+    margin-bottom: 2rem;
+}
+
+.movie-story h2,
+.streaming-options h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #ffffff;
+}

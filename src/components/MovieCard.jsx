@@ -1,9 +1,16 @@
-// src/components/MovieCard.jsx
+import { useNavigate } from 'react-router-dom';
+
 export default function MovieCard({
-  movie: { title, vote_average, poster_path, release_date, original_language },
+  movie: { title, vote_average, poster_path, release_date, original_language, id },
 }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/movie/${id}`);
+  };
+
   return (
-    <div className="movie-card">
+    <div className="movie-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
       <img
         src={
           poster_path
