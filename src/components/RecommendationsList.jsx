@@ -1,9 +1,9 @@
 // src/components/RecommendationsList.jsx
 import MovieCard from './MovieCard';
 
-export default function RecommendationsList({ recommendations }) {
+export default function RecommendationsList({ recommendations, onShowDetails }) {  // Add onShowDetails prop
   if (recommendations.length === 0) {
-    return null; // Don't render anything if there are no recommendations
+    return null;
   }
 
   return (
@@ -12,7 +12,7 @@ export default function RecommendationsList({ recommendations }) {
       <ul className="recommendations-list">
         {recommendations.map((movie, index) => (
           <li key={index} className="recommendation-item">
-            <MovieCard movie={movie} />
+            <MovieCard movie={movie} onShowDetails={onShowDetails} /> 
           </li>
         ))}
       </ul>

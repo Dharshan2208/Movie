@@ -1,16 +1,23 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function MovieCard({
   movie: { title, vote_average, poster_path, release_date, original_language, id },
+  onShowDetails // New prop to handle showing details
 }) {
-  const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
-    navigate(`/movie/${id}`);
+    onShowDetails(id);
   };
 
   return (
-    <div className="movie-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
+    <div 
+      className="movie-card" 
+      onClick={handleClick} 
+      style={{ cursor: 'pointer' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <img
         src={
           poster_path

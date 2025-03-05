@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import './MovieDetails.css';
 
 const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const STREAMING_API_KEY = import.meta.env.VITE_STREAMING_API_KEY;
 
 const TMDB_API_OPTIONS = {
   method: "GET",
@@ -14,12 +12,12 @@ const TMDB_API_OPTIONS = {
   },
 };
 
-export default function MovieDetails() {
-  const { movieId } = useParams();
+export default function MovieDetails({ movieId, onClose }) {
   const [movieDetails, setMovieDetails] = useState(null);
-  const [streamingOptions, setStreamingOptions] = useState([]);
+  const [trailerKey, setTrailerKey] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showTrailer, setShowTrailer] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -27,34 +25,21 @@ export default function MovieDetails() {
       setError(null);
 
       try {
-        // Fetch movie details from TMDB
-        const tmdbResponse = await fetch(`${TMDB_API_BASE_URL}/movie/${movieId}`, TMDB_API_OPTIONS);
-        if (!tmdbResponse.ok) throw new Error(`TMDB API Error: ${tmdbResponse.status} - ${tmdbResponse.statusText}`);
-        const tmdbData = await tmdbResponse.json();
-        setMovieDetails(tmdbData);
+        // Fetch movie details
+        const detailsResponse = await fetch(`${TMDB_API_BASE_URL}/movie/${movieId}`, TMDB_API_OPTIONS);
+        if (!detailsResponse.ok) throw new Error('Failed to fetch movie details');
+        const detailsData = await detailsResponse.json();
+        setMovieDetails(detailsData);
 
-        // Fetch streaming availability using Streaming Availability API via RapidAPI
-        if (tmdbData.imdb_id) {
-          const streamingResponse = await fetch(
-            `https://streaming-availability.p.rapidapi.com/v2/search/imdb?imdb_id=tt${tmdbData.imdb_id}&country=us`,
-            {
-              method: "GET",
-              headers: {
-                "X-RapidAPI-Key": STREAMING_API_KEY,
-                "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com",
-              },
-            }
-          );
-          if (!streamingResponse.ok) throw new Error(`Streaming API Error: ${streamingResponse.status} - ${streamingResponse.statusText}`);
-          const streamingData = await streamingResponse.json();
-          setStreamingOptions(streamingData.result || []);
-        } else {
-          console.warn('No IMDb ID found for streaming lookup.');
-          setStreamingOptions([]); // No streaming data if IMDb ID is missing
-        }
+        // Fetch trailer
+        const videosResponse = await fetch(`${TMDB_API_BASE_URL}/movie/${movieId}/videos`, TMDB_API_OPTIONS);
+        if (!videosResponse.ok) throw new Error('Failed to fetch videos');
+        const videosData = await videosResponse.json();
+        const trailer = videosData.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+        setTrailerKey(trailer?.key || null);
       } catch (error) {
         console.error('Error fetching movie details:', error);
-        setError(error.message || 'Failed to fetch movie details');
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -63,55 +48,69 @@ export default function MovieDetails() {
     fetchMovieDetails();
   }, [movieId]);
 
-  if (loading) return <div className="loading">Loading movie details...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-  if (!movieDetails) return <div>No movie details found.</div>;
+  if (!movieId) return null;
 
   return (
-    <div className="movie-details">
-      <div className="movie-header">
-        <img
-          src={
-            movieDetails.poster_path
-              ? `https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`
-              : "https://via.placeholder.com/500x750?text=No+Image"
-          }
-          alt={movieDetails.title}
-          className="poster"
-          onError={(e) => { e.target.src = "https://via.placeholder.com/500x750?text=No+Image"; }}
-        />
-        <div className="movie-info">
-          <h1>{movieDetails.title} ({movieDetails.release_date?.split('-')[0] || 'N/A'})</h1>
-          <p>Rating: {movieDetails.vote_average?.toFixed(1) || 'N/A'} / 10</p>
-          <p>Language: {movieDetails.original_language?.toUpperCase() || 'N/A'}</p>
-          <p>Runtime: {movieDetails.runtime} minutes</p>
-          <p>Genres: {movieDetails.genres?.map(genre => genre.name).join(', ') || 'N/A'}</p>
-        </div>
-      </div>
-      
-      <div className="movie-story">
-        <h2>Synopsis</h2>
-        <p>{movieDetails.overview || 'No synopsis available.'}</p>
-      </div>
-
-      <div className="streaming-options">
-        <h2>Where to Stream</h2>
-        {streamingOptions.length > 0 ? (
-          <ul>
-            {streamingOptions.map((option, index) => (
-              <li key={index}>
-                {option.service} -{' '}
-                {option.streamingInfo?.us?.link ? (
-                  <a href={option.streamingInfo.us.link} target="_blank" rel="noopener noreferrer">
-                    Watch Now
-                  </a>
-                ) : 'Not available for direct link'}
-                {option.streamingInfo?.us?.quality && ` (Quality: ${option.streamingInfo.us.quality})`}
-              </li>
-            ))}
-          </ul>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        {loading ? (
+          <div className="loading">Loading movie details...</div>
+        ) : error ? (
+          <div className="error">Error: {error}</div>
+        ) : !movieDetails ? (
+          <div>No movie details found.</div>
         ) : (
-          <p>No streaming options available at this time.</p>
+          <>
+            <button className="close-btn" onClick={onClose}>×</button>
+            <div className="movie-details">
+              <div className="movie-header">
+                <img
+                  src={
+                    movieDetails.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`
+                      : "https://via.placeholder.com/500x750?text=No+Image"
+                  }
+                  alt={movieDetails.title}
+                  className="poster"
+                  onError={(e) => { e.target.src = "https://via.placeholder.com/500x750?text=No+Image"; }}
+                />
+                <div className="movie-info">
+                  <h1>{movieDetails.title} ({movieDetails.release_date?.split('-')[0] || 'N/A'})</h1>
+                  <p>Rating: {movieDetails.vote_average?.toFixed(1) || 'N/A'} / 10</p>
+                  <p>Language: {movieDetails.original_language?.toUpperCase() || 'N/A'}</p>
+                  <p>Runtime: {movieDetails.runtime} minutes</p>
+                  <p>Genres: {movieDetails.genres?.map(genre => genre.name).join(', ') || 'N/A'}</p>
+                  {trailerKey && (
+                    <button 
+                      className="play-trailer-btn"
+                      onClick={() => setShowTrailer(!showTrailer)}
+                    >
+                      {showTrailer ? 'Hide Trailer' : 'Play Trailer'}
+                    </button>
+                  )}
+                </div>
+              </div>
+              
+              {showTrailer && trailerKey && (
+                <div className="trailer-container">
+                  <iframe
+                    width="100%"
+                    height="400"
+                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                    title="Movie Trailer"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+
+              <div className="movie-story">
+                <h2>Synopsis</h2>
+                <p>{movieDetails.overview || 'No synopsis available.'}</p>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
