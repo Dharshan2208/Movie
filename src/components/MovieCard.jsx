@@ -1,22 +1,32 @@
-import { useState } from 'react';
+// src/components/MovieCard.jsx
+import { useEffect } from 'react';
 
-export default function MovieCard({
-  movie: { title, vote_average, poster_path, release_date, original_language, id },
-  onShowDetails // New prop to handle showing details
-}) {
-  const [isHovered, setIsHovered] = useState(false);
+export default function MovieCard({ movie, onShowDetails }) {
+  const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
+  const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-  const handleClick = () => {
-    onShowDetails(id);
+  const TMDB_API_OPTIONS = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${TMDB_API_KEY}`,
+    },
   };
+
+  const handleCardClick = () => {
+    onShowDetails(movie.id);
+  };
+
+  const { title, vote_average, poster_path, release_date, original_language, id } = movie;
+
+  // Since we're not showing details in this component anymore, 
+  // we don't need to fetch data here - MovieDetails component will handle it
 
   return (
     <div 
       className="movie-card" 
-      onClick={handleClick} 
+      onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <img
         src={
@@ -25,6 +35,7 @@ export default function MovieCard({
             : "no-movie.png"
         }
         alt={title}
+        loading="lazy"
       />
       <div className="mt-4">
         <h3>{title}</h3>
@@ -34,7 +45,7 @@ export default function MovieCard({
             <p>{vote_average ? vote_average.toFixed(1) : "N/A"}</p>
           </div>
           <span>•</span>
-          <p className="lang">{original_language}</p>
+          <p className="lang">{original_language?.toUpperCase()}</p>
           <span>•</span>
           <p className="year">{release_date ? release_date.split('-')[0] : "N/A"}</p>
         </div>

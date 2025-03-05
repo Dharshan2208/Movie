@@ -212,7 +212,10 @@ function App() {
             <ul className="hide-scrollbar">
               {trendingMovies.map((movie) => (
                 <li key={movie.id}>
-                  <MovieCard movie={movie} onShowDetails={handleShowDetails} />
+                  <MovieCard 
+                    movie={movie} 
+                    onShowDetails={handleShowDetails} 
+                  />
                 </li>
               ))}
             </ul>

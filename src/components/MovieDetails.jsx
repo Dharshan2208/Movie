@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './MovieDetails.css';
+import '/src/styles/index.css';
 
 const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
