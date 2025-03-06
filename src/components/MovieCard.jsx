@@ -1,4 +1,4 @@
-// src/components/MovieCard.jsx
+
 import { useEffect } from 'react';
 
 export default function MovieCard({ movie, onShowDetails }) {
@@ -18,9 +18,6 @@ export default function MovieCard({ movie, onShowDetails }) {
   };
 
   const { title, vote_average, poster_path, release_date, original_language, id } = movie;
-
-  // Since we're not showing details in this component anymore, 
-  // we don't need to fetch data here - MovieDetails component will handle it
 
   return (
     <div 
