@@ -1,4 +1,4 @@
-// src/components/MovieInputs.jsx
+
 export default function MovieInputs({ count, movies, onChange }) {
   return (
     <div className="movie-inputs">
