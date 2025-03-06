@@ -275,20 +275,17 @@ h2 {
 /* Trending Movies Styles */
 .trending {
   margin-top: 30px;
-  /* Reduced margin */
 }
 
 .trending ul {
   display: flex;
   gap: 15px;
-  /* Reduced gap between cards */
   overflow-x: auto;
   padding-bottom: 10px;
 }
 
 .trending li {
   min-width: 90px;
-  /* Reduced card width from 230px to 180px */
   flex-shrink: 0;
 }
 
@@ -303,13 +300,13 @@ h2 {
   gap: 20px;
 }
 
-/* Error Message */
+
 .error-message {
   color: #ff6b6b;
   margin-top: 10px;
 }
 
-/* Scrollbar Hiding */
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -321,47 +318,34 @@ h2 {
 
 .movie-mixer {
   margin: 20px auto;
-  /* Center the section horizontally */
   max-width: 800px;
-  /* Limit width for better centering */
   text-align: center;
-  /* Center text and elements */
 }
 
 .movie-inputs,
 .input-selector,
 .submit-button {
   text-align: center;
-  /* Ensure all child elements are centered */
 }
 
 .option-buttons {
   justify-content: center;
-  /* Center the option buttons */
   gap: 15px;
-  /* Maintain spacing between buttons */
 }
 
 .input-group {
   display: inline-block;
-  /* Allow inputs to be centered */
   margin: 15px auto;
-  /* Center input groups */
   text-align: left;
-  /* Left-align labels and inputs within the group */
 }
 
 .input-group input {
   max-width: 300px;
-  /* Reduce input width for centering */
 }
 
-/* Ensure the submit button stays centered */
 .submit-button {
   display: block;
-  /* Make it a block element for centering */
   margin: 20px auto;
-  /* Center horizontally */
 }
 
 .recommendations-list {
@@ -376,7 +360,6 @@ h2 {
   margin: 0;
 }
 
-/* Update existing modal styles and add new ones */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -397,7 +380,6 @@ h2 {
   border-radius: 16px;
   width: 90%;
   max-width: 700px;
-  /* Increased for better layout with trailer */
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -485,7 +467,6 @@ h2 {
   margin-top: 20px;
   position: relative;
   padding-bottom: 56.25%;
-  /* 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
 }
