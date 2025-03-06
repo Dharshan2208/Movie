@@ -1,4 +1,4 @@
-// src/appwrite.js
+
 import { Client, Databases, ID, Query } from "appwrite";
 
 const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
