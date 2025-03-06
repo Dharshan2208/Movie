@@ -1,5 +1,5 @@
-// src/App.jsx
-import { BrowserRouter as Router } from 'react-router-dom';  // Remove Routes, Route if not needed
+
+import { BrowserRouter as Router } from 'react-router-dom';
 import MovieCard from './components/MovieCard';
 import Search from './components/Search';
 import InputSelector from './components/InputSelector';
@@ -40,7 +40,7 @@ function App() {
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 1000, [searchTerm]);
 
   const handleInputCountChange = (count) => {
-    console.log('Input count changed to:', count);  // Debug
+    console.log('Input count changed to:', count); 
     setInputCount(count);
     setMovies(Array(count).fill(''));
     setRecommendations([]);
@@ -163,7 +163,7 @@ function App() {
   }, [debouncedSearchTerm]);
 
   const handleShowDetails = (movieId) => {
-    console.log('Showing details for movie ID:', movieId);  // Debug
+    console.log('Showing details for movie ID:', movieId); 
     setSelectedMovieId(movieId);
   };
 
@@ -200,7 +200,7 @@ function App() {
               {recError && <div className="error-message">{recError}</div>}
               <RecommendationsList 
                 recommendations={recommendations} 
-                onShowDetails={handleShowDetails}  // Pass the handler
+                onShowDetails={handleShowDetails}  
               />
             </>
           )}
