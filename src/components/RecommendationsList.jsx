@@ -1,4 +1,4 @@
-// src/components/RecommendationsList.jsx
+
 import MovieCard from './MovieCard';
 
 export default function RecommendationsList({ recommendations, onShowDetails }) {
