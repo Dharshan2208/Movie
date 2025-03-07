@@ -1,4 +1,3 @@
-// src/components/InputSelector.jsx
 import { useState } from 'react';
 
 export default function InputSelector({ onSelect }) {

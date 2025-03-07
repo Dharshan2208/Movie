@@ -12,7 +12,7 @@ const TMDB_API_OPTIONS = {
   },
 };
 
-export default function MovieDetails({ movieId, onClose }) {
+export default function MovieDetails({ movieId, onClose, recommendations }) {
   const [movieDetails, setMovieDetails] = useState(null);
   const [trailerKey, setTrailerKey] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,13 @@ export default function MovieDetails({ movieId, onClose }) {
         const detailsResponse = await fetch(`${TMDB_API_BASE_URL}/movie/${movieId}`, TMDB_API_OPTIONS);
         if (!detailsResponse.ok) throw new Error('Failed to fetch movie details');
         const detailsData = await detailsResponse.json();
-        setMovieDetails(detailsData);
+
+        // Check if this movie is in recommendations and add the reason
+        const recommendation = recommendations.find(rec => rec.id === movieId);
+        setMovieDetails({
+          ...detailsData,
+          recommendationReason: recommendation?.recommendationReason || null
+        });
 
         // Fetch trailer
         const videosResponse = await fetch(`${TMDB_API_BASE_URL}/movie/${movieId}/videos`, TMDB_API_OPTIONS);
@@ -45,8 +51,10 @@ export default function MovieDetails({ movieId, onClose }) {
       }
     };
 
-    fetchMovieDetails();
-  }, [movieId]);
+    if (movieId) {
+      fetchMovieDetails();
+    }
+  }, [movieId, recommendations]);
 
   if (!movieId) return null;
 
@@ -98,10 +106,16 @@ export default function MovieDetails({ movieId, onClose }) {
                     height="400"
                     src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
                     title="Movie Trailer"
-                    frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
+                </div>
+              )}
+
+              {movieDetails.recommendationReason && (
+                <div className="recommendation-reason">
+                  <h3>Why We Recommended This</h3>
+                  <p>{movieDetails.recommendationReason}</p>
                 </div>
               )}
 

@@ -1,6 +1,3 @@
-// src/components/MovieCard.jsx
-import { useEffect } from 'react';
-
 export default function MovieCard({ movie, onShowDetails }) {
   const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
   const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -14,13 +11,11 @@ export default function MovieCard({ movie, onShowDetails }) {
   };
 
   const handleCardClick = () => {
+    console.log('MovieCard clicked, ID:', movie.id); // Debug
     onShowDetails(movie.id);
   };
 
   const { title, vote_average, poster_path, release_date, original_language, id } = movie;
-
-  // Since we're not showing details in this component anymore, 
-  // we don't need to fetch data here - MovieDetails component will handle it
 
   return (
     <div 

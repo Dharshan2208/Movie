@@ -1,5 +1,4 @@
-// src/App.jsx
-import { BrowserRouter as Router } from 'react-router-dom';  // Remove Routes, Route if not needed
+import { BrowserRouter as Router } from 'react-router-dom';
 import MovieCard from './components/MovieCard';
 import Search from './components/Search';
 import InputSelector from './components/InputSelector';
@@ -40,7 +39,7 @@ function App() {
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 1000, [searchTerm]);
 
   const handleInputCountChange = (count) => {
-    console.log('Input count changed to:', count);  // Debug
+    console.log('Input count changed to:', count);
     setInputCount(count);
     setMovies(Array(count).fill(''));
     setRecommendations([]);
@@ -80,13 +79,20 @@ function App() {
               text: `
               Based on these movies: ${movies.join(', ')}, suggest 5 movies that:
                   Combine ≥3 genres from input titles using IMDB's taxonomy
-                  Match narrative elements from metadata
-                  Prioritize films with multi-genre DNA
-                  Include at least 2 non-English language films
+                  Match narrative elements from metadata:
+                  Shared themes/tones (family bonds, existential crises, heist mechanics)
+                  Directorial signatures (nonlinear storytelling, genre subversion)
+                  Prioritize films with:
+                  Multi-genre DNA (e.g., horror-comedy-romance)
+                  Crew overlaps (writers/cinematographers from original films)
+                  IMDB ratings within 1.5 points of input average
+                  Thematic continuity (comparable character arcs/motifs)
+                  Include at least 2 non-English language films from the same languages/regions as the input movies
                   Exclude 18+ content and documentaries
-                  Return exactly 5 movie titles in this format, one per line:
-                  Title (Original Language Title)
-                  No numbers, bullets, or punctuation. Only movie names with original language titles in parentheses, one per line.
+                  Return exactly 5 movie titles with a brief reason for each recommendation in the following format:
+                  Title (Original Language Title) - Reason for recommendation(which should connect to the input movies)
+                  No comments like "Here are 5 movie recommendations"
+                  No numbers, bullets, or extra punctuation beyond the dash separating title and reason.
               `
             }]
           }]
@@ -97,21 +103,25 @@ function App() {
       
       const data = await response.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      const movieTitles = text.split('\n')
+      const movieEntries = text.split('\n')
         .filter(movie => movie.trim())
-        .map(title => title.trim())
+        .map(entry => entry.trim())
         .slice(0, 5);
 
       const detailedMovies = await Promise.all(
-        movieTitles.map(async (title) => {
+        movieEntries.map(async (entry) => {
+          const [titleWithLang, reason] = entry.split(' - ');
+          const [title, originalTitle] = titleWithLang.split(' (');
+          const cleanOriginalTitle = originalTitle ? originalTitle.slice(0, -1) : title;
+          
           const searchResponse = await fetch(
-            `${API_BASE_URL}/search/movie?query=${encodeURIComponent(title.split(' (')[0])}`,
+            `${API_BASE_URL}/search/movie?query=${encodeURIComponent(title)}`,
             API_OPTIONS
           );
           if (!searchResponse.ok) throw new Error(`Failed to fetch data for ${title}`);
           
           const searchData = await searchResponse.json();
-          return searchData.results[0] || { title };
+          return { ...searchData.results[0] || { title }, recommendationReason: reason || 'No reason provided' };
         })
       );
 
@@ -123,29 +133,32 @@ function App() {
     }
   };
 
-  const fetchMovies = async (query = "") => {
-    setSearchLoading(true);
-    setSearchError("");
+const fetchMovies = async (query = "") => {
+  setSearchLoading(true);
+  setSearchError("");
 
-    try {
-      const endpoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
-
-      const response = await fetch(endpoint, API_OPTIONS);
-      if (!response.ok) throw new Error("Failed to fetch movies");
-      
-      const data = await response.json();
-      setMovieList(data.results || []);
-      if (query && data.results[0]) {
-        updateSearchCount(query, data.results[0]);
-      }
-    } catch (error) {
-      setSearchError("Error fetching movies");
-    } finally {
-      setSearchLoading(false);
+  try {
+    let endpoint;
+    if (query) {
+      endpoint = `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`;
+    } else {
+      endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&without_genres=99`;
     }
-  };
+
+    const response = await fetch(endpoint, API_OPTIONS);
+    if (!response.ok) throw new Error("Failed to fetch movies");
+    
+    const data = await response.json();
+    setMovieList(data.results || []);
+    if (query && data.results[0]) {
+      updateSearchCount(query, data.results[0]);
+    }
+  } catch (error) {
+    setSearchError("Error fetching movies");
+  } finally {
+    setSearchLoading(false);
+  }
+};
 
   const loadTrendingMovies = async () => {
     try {
@@ -163,7 +176,7 @@ function App() {
   }, [debouncedSearchTerm]);
 
   const handleShowDetails = (movieId) => {
-    console.log('Showing details for movie ID:', movieId);  // Debug
+    console.log('Showing details for movie ID:', movieId); // Debug
     setSelectedMovieId(movieId);
   };
 
@@ -200,7 +213,7 @@ function App() {
               {recError && <div className="error-message">{recError}</div>}
               <RecommendationsList 
                 recommendations={recommendations} 
-                onShowDetails={handleShowDetails}  // Pass the handler
+                onShowDetails={handleShowDetails}
               />
             </>
           )}
@@ -239,7 +252,7 @@ function App() {
           )}
         </section>
 
-        <MovieDetails movieId={selectedMovieId} onClose={handleCloseModal} />
+        <MovieDetails movieId={selectedMovieId} onClose={handleCloseModal} recommendations={recommendations} />
       </main>
     </Router>
   );
